@@ -114,7 +114,7 @@ module NNG
       ret = FFI.nng_msg_dup(dup_ptr, @msg)
       FFI.check_error(ret, "Duplicate message")
 
-      new_msg = allocate
+      new_msg = self.class.allocate
       new_msg.instance_variable_set(:@msg, dup_ptr.read_pointer)
       new_msg.instance_variable_set(:@msg_ptr, dup_ptr)
       new_msg.instance_variable_set(:@freed, false)
