@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'io/wait'
 require_relative 'protocols'
 
 module NNG
@@ -37,12 +38,25 @@ module NNG
       self
     end
 
+    # Wait for socket to become writable (within configured timeout).
+    def wait_writable
+      fd = get_option 'send-fd'
+      io = IO.for_fd fd, autoclose: false
+      ms = get_option "send-timeout", type: :ms
+
+      timeout = ms * 1000 if ms && ms >= 0
+
+      io.wait_readable timeout
+    end
+
     # Send data
     # @param data [String] data to send
     # @param flags [Integer] optional flags (e.g., FFI::NNG_FLAG_NONBLOCK)
     # @return [self]
     def send(data, flags: 0)
       check_closed
+      wait_writable if Fiber.scheduler
+
       data_str = data.to_s
       data_ptr = ::FFI::MemoryPointer.new(:uint8, data_str.bytesize)
       data_ptr.put_bytes(0, data_str)
@@ -52,25 +66,36 @@ module NNG
       self
     end
 
-
     # Send message
     # @param msg [Message] message to send
     # @param flags [Integer] optional flags (e.g., FFI::NNG_FLAG_NONBLOCK)
     # @return [self]
     def sendmsg(msg, flags: 0)
       check_closed
+      wait_writable if Fiber.scheduler
 
       ret = FFI.nng_sendmsg(@socket, msg, flags)
       FFI.check_error(ret, "Send message")
       self
     end
 
+    # Wait for socket to become readable (within configured timeout).
+    def wait_readable
+      fd = get_option 'recv-fd'
+      io = IO.for_fd fd, autoclose: false
+      ms = get_option "recv-timeout", type: :ms
+
+      timeout = ms * 1000 if ms && ms >= 0
+
+      io.wait_readable timeout
+    end
 
     # Receive data
     # @param flags [Integer] optional flags (e.g., FFI::NNG_FLAG_NONBLOCK)
     # @return [String] received data
     def recv(flags: FFI::NNG_FLAG_ALLOC)
       check_closed
+      wait_readable if Fiber.scheduler
 
       buf_ptr = ::FFI::MemoryPointer.new(:pointer)
       size_ptr = ::FFI::MemoryPointer.new(:size_t)
@@ -91,6 +116,7 @@ module NNG
 
     def recvmsg(flags: 0)
       check_closed
+      wait_readable if Fiber.scheduler
 
       msg_ptr = ::FFI::MemoryPointer.new(:pointer)
       ret = FFI.nng_recvmsg(@socket, msg_ptr, flags)

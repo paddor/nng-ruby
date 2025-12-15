@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'spec_helper'
+require 'async'
 
 RSpec.describe NNG do
   describe 'Pair protocol' do
@@ -23,9 +24,45 @@ RSpec.describe NNG do
       server.send('Hello, client!')
       received = client.recv
       expect(received).to eq('Hello, client!')
+    ensure
+      server&.close
+      client&.close
+    end
 
-      server.close
-      client.close
+    context 'Async' do
+      let(:addr) { 'inproc://pair1-async' }
+
+      it 'can send and receive messages' do
+        Async do |task|
+          server = NNG::Socket.new(:pair1)
+          server.listen(addr)
+
+          client = NNG::Socket.new(:pair1)
+          client.dial(addr)
+
+          # Give sockets time to connect
+          sleep 0.1
+
+          Barrier do |barrier|
+            barrier.async annotation: 'client'  do
+              client.send('Hello, server!')
+
+              received = client.recv
+              expect(received).to eq('Hello, client!')
+            end
+
+            barrier.async annotation: 'server' do
+              received = server.recv
+              expect(received).to eq('Hello, server!')
+
+              server.send('Hello, client!')
+            end
+          end
+        ensure
+          server&.close
+          client&.close
+        end
+      end
     end
   end
 

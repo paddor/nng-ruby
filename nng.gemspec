@@ -15,7 +15,7 @@ Gem::Specification.new do |spec|
                        'Includes bundled libnng shared library.'
   spec.homepage      = 'https://github.com/Hola-QingYi/nng-ruby'
   spec.license       = 'MIT'
-  spec.required_ruby_version = '>= 2.5.0'
+  spec.required_ruby_version = '>= 3.2.0'
 
   spec.metadata['homepage_uri'] = spec.homepage
   spec.metadata['source_code_uri'] = 'https://github.com/Hola-QingYi/nng-ruby'
@@ -42,6 +42,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'rspec', '~> 3.0'
   spec.add_development_dependency 'yard', '~> 0.9'
   spec.add_development_dependency 'rake-compiler', '~> 1.0'
+  spec.add_development_dependency 'async'
 
   # Extension configuration (for capturing install-time options)
   # We use FFI so no actual compilation, but extconf.rb captures --with-nng-* options
