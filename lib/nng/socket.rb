@@ -52,6 +52,23 @@ module NNG
       self
     end
 
+
+    # Send message
+    # @param msg [Message] message to send
+    # @param flags [Integer] optional flags (e.g., FFI::NNG_FLAG_NONBLOCK)
+    # @return [self]
+    def sendmsg(msg, flags: 0)
+      check_closed
+      # data_str = data.to_s
+      # data_ptr = ::FFI::MemoryPointer.new(:uint8, data_str.bytesize)
+      # data_ptr.put_bytes(0, data_str)
+
+      ret = FFI.nng_sendmsg(@socket, msg, flags)
+      FFI.check_error(ret, "Send message")
+      self
+    end
+
+
     # Receive data
     # @param flags [Integer] optional flags (e.g., FFI::NNG_FLAG_NONBLOCK)
     # @return [String] received data
@@ -73,6 +90,16 @@ module NNG
       FFI.nng_free(response_buf, response_size)
 
       data
+    end
+
+    def recvmsg(flags: 0)
+      check_closed
+
+      msg_ptr = ::FFI::MemoryPointer.new(:pointer)
+      ret = FFI.nng_recvmsg(@socket, msg_ptr, flags)
+      FFI.check_error(ret, "Receive message")
+
+      Message.from_pointer msg_ptr
     end
 
     # Set socket option

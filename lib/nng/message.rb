@@ -5,6 +5,15 @@ module NNG
   class Message
     attr_reader :msg_ptr
 
+    # @param ptr [::FFI::MemoryPointer]
+    def self.from_pointer(ptr)
+      new_msg = allocate
+      new_msg.instance_variable_set(:@msg, ptr.read_pointer)
+      new_msg.instance_variable_set(:@msg_ptr, ptr)
+      new_msg.instance_variable_set(:@freed, false)
+      new_msg
+    end
+
     # Create a new message
     # @param size [Integer] initial size
     def initialize(size: 0)
