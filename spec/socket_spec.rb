@@ -52,6 +52,53 @@ RSpec.describe NNG do
       rep&.close
       req&.close
     end
+
+    context 'RAW' do
+      let(:addr) { 'inproc://req-rep-raw' }
+
+      it 'can handle request-reply pattern' do
+        request_ids = []
+
+        rep = NNG::Socket.new(:rep, raw: true)
+        rep.listen(addr)
+
+        req = NNG::Socket.new(:req, raw: true)
+        req.dial(addr)
+
+        sleep 0.1
+
+        # REQ: Send requests
+        2.times do
+          msg = NNG::Message.new
+          request_id = NNG::Message.new_request_id
+          request_ids << request_id
+
+          msg.header_append request_id
+          msg.body = 'What is the answer?'
+          req.sendmsg msg
+        end
+
+        # REP: receive requests and send replies
+        2.times do
+          question = rep.recvmsg
+          expect(question.body).to eq('What is the answer?')
+
+          reply = question.dup # copy header
+          reply.body = '42'
+          rep.sendmsg(reply)
+        end
+
+        # REQ: receive replies
+        2.times do
+          answer = req.recvmsg
+          expect(answer.body).to eq('42')
+          expect(request_ids).to include(answer.header.byteslice(-4..-1))
+        end
+      ensure
+        rep&.close
+        req&.close
+      end
+    end
   end
 
   describe 'Push/Pull protocol' do
