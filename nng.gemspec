@@ -53,7 +53,7 @@ Gem::Specification.new do |spec|
     │ Thank you for installing nng-ruby gem!                    │
     │                                                           │
     │ NNG (nanomsg-next-generation) Ruby bindings               │
-    │ Version: #{NNG::VERSION}                                        │
+    │ Version: #{NNG::VERSION.rjust(25)}                        │
     │                                                           │
     │ Quick start:                                              │
     │   require 'nng'                                           │
@@ -61,7 +61,7 @@ Gem::Specification.new do |spec|
     │   socket.listen("tcp://127.0.0.1:5555")                   │
     │                                                           │
     │ Documentation: https://rubydoc.info/gems/nng-ruby         │
-    │ Examples: https://github.com/Hola-QingYi/nng-ruby        │
+    │ Examples: https://github.com/Hola-QingYi/nng-ruby         │
     └───────────────────────────────────────────────────────────┘
   MSG
 end
