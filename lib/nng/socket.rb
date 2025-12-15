@@ -108,15 +108,15 @@ module NNG
 
       case value
       when true, false
-        ret = FFI.nng_setopt_bool(@socket, name, value)
+        ret = FFI.nng_socket_set_bool(@socket, name, value)
       when Integer
         if value >= 0 && value <= 2**31 - 1
-          ret = FFI.nng_setopt_int(@socket, name, value)
+          ret = FFI.nng_socket_set_int(@socket, name, value)
         else
-          ret = FFI.nng_setopt_uint64(@socket, name, value)
+          ret = FFI.nng_socket_set_uint64(@socket, name, value)
         end
       when String
-        ret = FFI.nng_setopt_string(@socket, name, value)
+        ret = FFI.nng_socket_set_string(@socket, name, value)
       else
         raise ArgumentError, "Unsupported option value type: #{value.class}"
       end
@@ -138,17 +138,17 @@ module NNG
 
       ret = case type
             when :bool
-              FFI.nng_getopt_bool(@socket, name, value_ptr)
+              FFI.nng_socket_get_bool(@socket, name, value_ptr)
             when :int
-              FFI.nng_getopt_int(@socket, name, value_ptr)
+              FFI.nng_socket_get_int(@socket, name, value_ptr)
             when :size
-              FFI.nng_getopt_size(@socket, name, value_ptr)
+              FFI.nng_socket_get_size(@socket, name, value_ptr)
             when :uint64
-              FFI.nng_getopt_uint64(@socket, name, value_ptr)
+              FFI.nng_socket_get_uint64(@socket, name, value_ptr)
             when :ms
-              FFI.nng_getopt_ms(@socket, name, value_ptr)
+              FFI.nng_socket_get_ms(@socket, name, value_ptr)
             when :string
-              FFI.nng_getopt_string(@socket, name, value_ptr)
+              FFI.nng_socket_get_string(@socket, name, value_ptr)
             else
               raise ArgumentError, "Unknown option type: #{type}"
             end
@@ -185,7 +185,7 @@ module NNG
     # @return [self]
     def set_option_ms(name, ms)
       check_closed
-      ret = FFI.nng_setopt_ms(@socket, name, ms)
+      ret = FFI.nng_socket_set_ms(@socket, name, ms)
       FFI.check_error(ret, "Set option #{name}")
       self
     end

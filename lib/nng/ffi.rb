@@ -324,24 +324,24 @@ module NNG
     attach_function :nng_socket_id, [NngSocket.by_value], :int
 
     # Socket options - set
-    attach_function :nng_setopt, [NngSocket.by_value, :string, :pointer, :size_t], :int
-    attach_function :nng_setopt_bool, [NngSocket.by_value, :string, :bool], :int
-    attach_function :nng_setopt_int, [NngSocket.by_value, :string, :int], :int
-    attach_function :nng_setopt_size, [NngSocket.by_value, :string, :size_t], :int
-    attach_function :nng_setopt_uint64, [NngSocket.by_value, :string, :uint64], :int
-    attach_function :nng_setopt_string, [NngSocket.by_value, :string, :string], :int
-    attach_function :nng_setopt_ptr, [NngSocket.by_value, :string, :pointer], :int
-    attach_function :nng_setopt_ms, [NngSocket.by_value, :string, :nng_duration], :int
+    attach_function :nng_socket_set, [NngSocket.by_value, :string, :pointer, :size_t], :int
+    attach_function :nng_socket_set_bool, [NngSocket.by_value, :string, :bool], :int
+    attach_function :nng_socket_set_int, [NngSocket.by_value, :string, :int], :int
+    attach_function :nng_socket_set_size, [NngSocket.by_value, :string, :size_t], :int
+    attach_function :nng_socket_set_uint64, [NngSocket.by_value, :string, :uint64], :int
+    attach_function :nng_socket_set_string, [NngSocket.by_value, :string, :string], :int
+    attach_function :nng_socket_set_ptr, [NngSocket.by_value, :string, :pointer], :int
+    attach_function :nng_socket_set_ms, [NngSocket.by_value, :string, :nng_duration], :int
 
     # Socket options - get
-    attach_function :nng_getopt, [NngSocket.by_value, :string, :pointer, :pointer], :int
-    attach_function :nng_getopt_bool, [NngSocket.by_value, :string, :pointer], :int
-    attach_function :nng_getopt_int, [NngSocket.by_value, :string, :pointer], :int
-    attach_function :nng_getopt_size, [NngSocket.by_value, :string, :pointer], :int
-    attach_function :nng_getopt_uint64, [NngSocket.by_value, :string, :pointer], :int
-    attach_function :nng_getopt_string, [NngSocket.by_value, :string, :pointer], :int
-    attach_function :nng_getopt_ptr, [NngSocket.by_value, :string, :pointer], :int
-    attach_function :nng_getopt_ms, [NngSocket.by_value, :string, :pointer], :int
+    attach_function :nng_socket_get, [NngSocket.by_value, :string, :pointer, :pointer], :int
+    attach_function :nng_socket_get_bool, [NngSocket.by_value, :string, :pointer], :int
+    attach_function :nng_socket_get_int, [NngSocket.by_value, :string, :pointer], :int
+    attach_function :nng_socket_get_size, [NngSocket.by_value, :string, :pointer], :int
+    attach_function :nng_socket_get_uint64, [NngSocket.by_value, :string, :pointer], :int
+    attach_function :nng_socket_get_string, [NngSocket.by_value, :string, :pointer], :int
+    attach_function :nng_socket_get_ptr, [NngSocket.by_value, :string, :pointer], :int
+    attach_function :nng_socket_get_ms, [NngSocket.by_value, :string, :pointer], :int
 
     # Connection management
     attach_function :nng_listen, [NngSocket.by_value, :string, :pointer, :int], :int
