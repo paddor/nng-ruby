@@ -52,6 +52,11 @@ module NNG
       body_ptr.read_bytes(length)
     end
 
+    def body=(new_body)
+      clear
+      append new_body
+    end
+
     # Get message body length
     # @return [Integer] length in bytes
     def length
@@ -67,6 +72,11 @@ module NNG
       header_ptr = FFI.nng_msg_header(@msg)
       length = FFI.nng_msg_header_len(@msg)
       header_ptr.read_bytes(length)
+    end
+
+    def header=(new_header)
+      header_clear
+      header_append new_header
     end
 
     # Get message header length
