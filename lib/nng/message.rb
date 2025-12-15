@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'securerandom'
+
 module NNG
   # NNG message wrapper
   class Message
@@ -12,6 +14,13 @@ module NNG
       new_msg.instance_variable_set(:@msg_ptr, ptr)
       new_msg.instance_variable_set(:@freed, false)
       new_msg
+    end
+
+    # @return [String] a new random request ID
+    def self.new_request_id
+      n = SecureRandom.bytes(4).unpack1("N")
+      n |= 0x80000000 # set most significant bit
+      [n].pack("N")
     end
 
     # Create a new message
