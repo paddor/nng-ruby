@@ -66,6 +66,30 @@ RSpec.describe NNG do
     end
   end
 
+  describe 'peer name/ID' do
+    let(:socket) { NNG::Socket.new(:rep) }
+
+    it 'can return peer name' do
+      expect(socket.peer_name).to eq('req'.b)
+    end
+
+    it 'can return peer ID' do
+      expect(socket.peer_id).to be_a(Integer)
+    end
+  end
+
+  describe 'proto name/ID' do
+    let(:socket) { NNG::Socket.new(:rep) }
+
+    it 'can return proto name' do
+      expect(socket.proto_name).to eq('rep'.b)
+    end
+
+    it 'can return proto ID' do
+      expect(socket.proto_id).to be_a(Integer)
+    end
+  end
+
   describe 'Request/Reply protocol' do
     it 'can handle request-reply pattern' do
       rep = NNG::Socket.new(:rep)

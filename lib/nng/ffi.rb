@@ -322,6 +322,10 @@ module NNG
     # Socket functions
     attach_function :nng_close, [NngSocket.by_value], :int
     attach_function :nng_socket_id, [NngSocket.by_value], :int
+    attach_function :nng_socket_peer_name, [NngSocket.by_value, :pointer], :int
+    attach_function :nng_socket_peer_id, [NngSocket.by_value, :pointer], :int
+    attach_function :nng_socket_proto_name, [NngSocket.by_value, :pointer], :int
+    attach_function :nng_socket_proto_id, [NngSocket.by_value, :pointer], :int
 
     # Socket options - set
     attach_function :nng_socket_set, [NngSocket.by_value, :string, :pointer, :size_t], :int

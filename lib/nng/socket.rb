@@ -38,6 +38,43 @@ module NNG
       self
     end
 
+    def peer_id
+      check_closed
+
+      ptr = ::FFI::MemoryPointer.new(:uint16)
+      ret = FFI.nng_socket_peer_name(@socket, ptr)
+      FFI.check_error(ret, "Get peer ID")
+
+      ptr.read_uint16
+    end
+
+
+    def peer_name
+      ptr = ::FFI::MemoryPointer.new(:pointer)
+      ret = FFI.nng_socket_peer_name(@socket, ptr)
+      FFI.check_error(ret, "Get peer name")
+
+      ptr.read_pointer.read_string
+    end
+
+    def proto_id
+      ptr = ::FFI::MemoryPointer.new(:uint16)
+      ret = FFI.nng_socket_proto_id(@socket, ptr)
+      FFI.check_error(ret, "Get proto ID")
+
+      ptr.read_uint16
+    end
+
+    def proto_name
+      check_closed
+
+      ptr = ::FFI::MemoryPointer.new(:pointer)
+      ret = FFI.nng_socket_proto_name(@socket, ptr)
+      FFI.check_error(ret, "Get proto name")
+
+      ptr.read_pointer.read_string
+    end
+
     # Wait for socket to become writable (within configured timeout).
     def wait_writable
       fd = get_option 'send-fd'
