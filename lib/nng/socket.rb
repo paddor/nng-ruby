@@ -59,9 +59,6 @@ module NNG
     # @return [self]
     def sendmsg(msg, flags: 0)
       check_closed
-      # data_str = data.to_s
-      # data_ptr = ::FFI::MemoryPointer.new(:uint8, data_str.bytesize)
-      # data_ptr.put_bytes(0, data_str)
 
       ret = FFI.nng_sendmsg(@socket, msg, flags)
       FFI.check_error(ret, "Send message")
